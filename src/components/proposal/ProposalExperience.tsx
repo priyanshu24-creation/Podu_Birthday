@@ -60,7 +60,7 @@ const SECTIONS = [
   { id: "story", label: "Our Story" },
   { id: "gallery", label: "Memories" },
   { id: "letter", label: "Letter" },
-  { id: "reasons", label: "Reasons" },
+  { id: "reasons", label: "Secret" },
   { id: "surprise", label: "Surprise" },
   { id: "ask", label: "The Question" },
 ];
@@ -210,23 +210,14 @@ function Hero() {
         transition={{ delay: 1.4, duration: 1 }}
         className="mt-12"
       >
-        <MagneticButton
-          onClick={() =>
-            document.getElementById("birthday")?.scrollIntoView({ behavior: "smooth" })
-          }
-          className="bg-gradient-to-r from-rose-400 via-primary to-violet-400 text-primary-foreground glow-rose"
+        <motion.div
+          animate={{ y: [0, -4, 0] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-400 via-primary to-violet-400 px-10 py-4 text-base font-semibold tracking-wide text-primary-foreground glow-rose"
         >
-          <span className="flex items-center gap-2">
-            Open Your Cake 🎂
-            <motion.span
-              animate={{ y: [0, -4, 0], rotate: [-6, 6, -3, 0] }}
-              transition={{ duration: 1.4, repeat: Infinity }}
-              className="text-base"
-            >
-              💗
-            </motion.span>
-          </span>
-        </MagneticButton>
+          <span>Click Next to see more</span>
+          <ChevronRight size={18} />
+        </motion.div>
       </motion.div>
       <motion.div
         animate={{ y: [0, 10, 0] }}
@@ -1084,57 +1075,115 @@ function Letter() {
   );
 }
 
-/* ---------- Reasons ---------- */
-const REASONS = [
-  { e: "❤️", t: "Your smile", b: "It restarts my whole day." },
-  { e: "🌷", t: "Your kindness", b: "It changes the rooms you walk into." },
-  { e: "✨", t: "Your laugh", b: "I'd build a city around the sound." },
-  { e: "🌙", t: "Your personality", b: "Calm, sharp, soft, brave. All of it." },
-  { e: "☕", t: "Ordinary days", b: "You turn them into something cinematic." },
-  { e: "💫", t: "Just… you", b: "I keep running out of better words." },
-];
+/* ---------- Secret ---------- */
 function Reasons() {
+  const [opened, setOpened] = useState(false);
+
+  const openSecret = () => {
+    setOpened(true);
+    confetti({
+      particleCount: 90,
+      spread: 80,
+      startVelocity: 28,
+      scalar: 0.8,
+      origin: { y: 0.58 },
+      colors: ["#f9a8d4", "#c084fc", "#fb7185", "#fcd34d", "#fff"],
+    });
+  };
+
   return (
-    <section id="reasons" className="relative px-6 py-32">
-      <div className="mx-auto max-w-6xl">
+    <section id="reasons" className="relative grid min-h-screen place-items-center overflow-hidden px-6 py-24">
+      <motion.div
+        aria-hidden="true"
+        animate={{ scale: [1, 1.08, 1], opacity: [0.22, 0.42, 0.22] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute h-[32rem] w-[32rem] rounded-full bg-primary/20 blur-3xl"
+      />
+      <div className="mx-auto max-w-5xl text-center">
         <SectionHeading
-          eyebrow="Reasons"
-          title="six of many reasons"
-          subtitle="Because a heart like yours deserves more than one sentence."
+          eyebrow="A Secret"
+          title="I saved something softer for here"
+          subtitle="A tiny moment before the final surprise."
         />
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {REASONS.map((r, i) => (
-            <motion.div
-              key={r.t}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08, duration: 0.7 }}
-              whileHover={{ y: -8, rotate: -1 }}
-              animate={{ y: [0, -4, 0] }}
-              className="group relative overflow-hidden rounded-3xl section-shell p-8"
-              style={{ animation: `none` }}
-            >
-              <div
-                className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                style={{
-                  background:
-                    "radial-gradient(circle at 30% 0%, oklch(0.72 0.22 350 / 0.25), transparent 60%)",
-                }}
-              />
-              <div className="relative">
-                <div className="text-4xl">{r.e}</div>
-                <h3 className="mt-4 text-2xl font-semibold">{r.t}</h3>
-                <p className="mt-2 text-foreground/70">{r.b}</p>
-              </div>
-            </motion.div>
-          ))}
+
+        <div className="relative mx-auto max-w-3xl">
+          <AnimatePresence mode="wait">
+            {!opened ? (
+              <motion.button
+                key="closed"
+                onClick={openSecret}
+                initial={{ opacity: 0, y: 30, rotate: -1 }}
+                animate={{ opacity: 1, y: 0, rotate: 0 }}
+                exit={{ opacity: 0, scale: 0.92, filter: "blur(12px)" }}
+                whileHover={{ y: -8, rotate: 1 }}
+                whileTap={{ scale: 0.96 }}
+                className="group relative mx-auto grid min-h-[24rem] w-full place-items-center overflow-hidden rounded-[2rem] border border-primary/20 bg-white/30 p-8 shadow-[0_28px_70px_-28px_oklch(0.2_0.04_330/0.35)] backdrop-blur-xl"
+              >
+                <div
+                  className="absolute inset-0 opacity-55"
+                  style={{
+                    backgroundImage: `linear-gradient(135deg, oklch(0.98 0.03 330 / 0.88), oklch(0.94 0.05 305 / 0.72)), url(${photo13})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                />
+                <motion.div
+                  aria-hidden="true"
+                  animate={{ y: [0, -8, 0], rotate: [-3, 3, -3] }}
+                  transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+                  className="relative grid h-32 w-32 place-items-center rounded-full bg-gradient-to-br from-rose-300 via-pink-400 to-violet-400 text-5xl text-white shadow-[0_18px_48px_-16px_oklch(0.72_0.22_350/0.9)]"
+                >
+                  <Heart fill="currentColor" size={54} />
+                </motion.div>
+                <div className="relative mt-8 space-y-3">
+                  <p className="text-xs font-semibold uppercase tracking-[0.45em] text-primary/80">
+                    sealed for you
+                  </p>
+                  <p className="text-3xl font-semibold text-foreground md:text-5xl">
+                    open this little secret
+                  </p>
+                </div>
+              </motion.button>
+            ) : (
+              <motion.div
+                key="opened"
+                initial={{ opacity: 0, y: 30, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="relative overflow-hidden rounded-[2rem] border border-primary/20 bg-white/35 p-8 text-left shadow-[0_28px_70px_-28px_oklch(0.2_0.04_330/0.35)] backdrop-blur-xl md:p-12"
+              >
+                <div className="absolute right-6 top-6 text-primary/30">
+                  <Sparkles size={36} />
+                </div>
+                <p className="text-xs font-semibold uppercase tracking-[0.45em] text-primary/80">
+                  surprise note
+                </p>
+                <h3 className="mt-5 text-4xl font-semibold leading-tight text-foreground md:text-6xl">
+                  This whole page was never about reasons.
+                </h3>
+                <div className="mt-8 space-y-5 text-xl leading-relaxed text-foreground/75 md:text-2xl">
+                  <p>It was about making you pause, smile, and feel how deeply you are loved.</p>
+                  <p className="text-gradient-rose font-semibold">
+                    You are not a list to me. You are my favorite person, my safest feeling, and
+                    my sweetest surprise.
+                  </p>
+                </div>
+                <div className="mt-10 flex flex-wrap items-center gap-3">
+                  <span className="rounded-full border border-primary/20 bg-white/30 px-4 py-2 text-sm font-medium text-foreground/65">
+                    one more surprise ahead
+                  </span>
+                  <span className="rounded-full border border-white/30 bg-white/25 px-4 py-2 text-sm font-medium text-foreground/65">
+                    keep going
+                  </span>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </section>
   );
 }
-
 /* ---------- Surprise ---------- */
 function Surprise({ onOpenQuestion }: { onOpenQuestion: () => void }) {
   const openGift = () => {
